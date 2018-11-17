@@ -2,14 +2,37 @@
 const uuidv1 = require('uuid/v1');
 // const sha1 = require('sha1');
 const EventEmitter = require('events');
-// const axios = require('axios');
+const axios = require('axios');
 // const salt = '72rt81btcv723vx111b73rvc871bx36';
 
 class Sessions extends EventEmitter {
   constructor() {
     super();
     this.connections = {};
-    this.devices = [];
+    this.devices = {};
+  }
+
+  addDevice({ ip, port }) {
+    const url = `http://${ip}:${port}`;
+    return axios.get(url)
+      .then(response => {
+        this.devices[`${ip}:${port}`] = response.data;
+        return true;
+      })
+      .catch(err => {
+        return false;
+      })
+  }
+
+  sendCommand({ command, url }) {
+    return axios.post(`http://${url}/${command}`)
+      .then(response => {
+        this.devices[url] = response.data;
+        return true;
+      })
+      .catch(err => {
+        return false;
+      })
   }
 
   // createSession(connectionId, opt) {
@@ -234,21 +257,11 @@ class Sessions extends EventEmitter {
   //   return s;
   // }
   //
-  // getPublicSession(id) {
-  //   const s = this.getSession(id);
-  //   return {
-  //     id: s.id,
-  //     observer: s.observer.login,
-  //     players: s.players.map(p => p.login),
-  //     marks: s.marks,
-  //     stories: s.stories,
-  //     currentStory: s.currentStory,
-  //     sessionStarted: s.sessionStarted,
-  //     sessionFinished: s.sessionFinished,
-  //     state: s.state,
-  //     stats: s.stats,
-  //   }
-  // }
+  getPublicState() {
+    return {
+      devices: this.devices,
+    }
+  }
 
   addConnection(ws) {
     ws.id = uuidv1();

@@ -1,11 +1,7 @@
 import { setError } from "../helpers";
 
-export function newSession({ state }, payload) {
-  state.set(`data.isObserver`, true);
-  state.set(`data.token`, payload.token);
-  state.set(`data.sessionId`, payload.id);
-  state.set(`data.auth`, true);
-  state.set(`data.playground`, payload);
+export function sendState({ state }, payload) {
+  state.set(`data.devices`, payload.devices);
 }
 
 export function joinSessionResponse({ state }, data) {

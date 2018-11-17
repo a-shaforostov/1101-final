@@ -6,9 +6,14 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "@cerebral/react";
 import { state, signal } from 'cerebral/tags';
-import { Grid, Button, Form, Input, Icon, Message, Segment } from 'semantic-ui-react'
+import { Grid, Button, Form, Input, Icon, Message, Segment, Table } from 'semantic-ui-react'
 
 import './MainPage.css';
+
+import AddDevice from '../../components/AddDevice';
+import Kettle from '../../components/Kettle';
+import Thermostat from '../../components/Thermostat';
+import Toaster from '../../components/Toaster';
 
 class MainPage extends Component {
   handleChange = path => e => {
@@ -16,8 +21,7 @@ class MainPage extends Component {
   };
 
   render() {
-    const { page, login, isConnected, sessionId, jira, error } = this.props;
-    const url = `${window.location.origin}/${sessionId}`;
+    const { page, isConnected, error, devices } = this.props;
     return (
       page === 'main' &&
       <Grid centered>
@@ -33,25 +37,46 @@ class MainPage extends Component {
             {
               isConnected &&
               <Fragment>
-                {
-                  <Form className="observer__login">
-                    <Form.Field>
-                      <Input icon={{name: 'asterisk', color: 'red'}} label="Ім'я ведучого:" type="text" value={login}
-                             onChange={this.handleChange('data.login')}/>
-                    </Form.Field>
-                    <div><b>Інтеграція з Jira:</b></div>
-                    <Form.Field>
-                      <Input label="Jira url:" type="text" value={jira} onChange={this.handleChange('data.jira')}/>
-                    </Form.Field>
-                    <Form.Field>
-                      <Input label="Логін:" type="text" value={jira} onChange={this.handleChange('data.jira')}/>
-                    </Form.Field>
-                    <Form.Field>
-                      <Input className="pass__input" label="Пароль:" type="password" value={jira}
-                             onChange={this.handleChange('data')}/>
-                    </Form.Field>
-                  </Form>
-                }
+                <AddDevice />
+                <div><strong>Пристрої</strong></div>
+                <Table celled padded>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.HeaderCell>Тип</Table.HeaderCell>
+                      <Table.HeaderCell>Пристрій</Table.HeaderCell>
+                      <Table.HeaderCell>Стан</Table.HeaderCell>
+                      <Table.HeaderCell>Команди</Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
+                    {
+                      Object.entries(devices).map(([key, value]) => {
+                        switch (value.type) {
+                          case 'kettle': {
+                            return (<Kettle data={{
+                              ...value,
+                              url: key,
+                            }} />);
+                          }
+                          case 'thermostat': {
+                            return (<Thermostat data={{
+                              ...value,
+                              url: key,
+                            }} />);
+                          }
+                          case 'toaster': {
+                            return (<Toaster data={{
+                              ...value,
+                              url: key,
+                            }} />);
+                          }
+                          default: return null;
+                        }
+                      })
+                    }
+                  </Table.Body>
+                </Table>
+
               </Fragment>
             }
 
@@ -66,6 +91,7 @@ export default connect(
   {
     page: state`data.page`,
     error: state`data.error`,
+    devices: state`data.devices`,
     isConnected: state`data.isConnected`,
     updateField: signal`updateField`,
   },

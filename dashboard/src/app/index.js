@@ -29,30 +29,21 @@ export default ({ app }) => {
   return {
     state: {
       data: {
-        login: '',
-        isObserver: false,
-        sessionId: null,
-        token: null,
         isConnected: false,
-        auth: false,
-        issueedit: '',
-        storyedit: '',
-        marks: {
-          items: [0, 1, 2, 3, 5, 8, '?'],
-          editor: '',
-        },
-        jira: {},
-        playground: null,
-        statsVisible: false,
+        devices: {},
+        newIp: '',
+        newPort: '',
       },
     },
     signals: {
       rootRouted: route('/', sequences.rootRouted), // Головна сторінка, створення гри
-
-      createSession: sequences.createSession,
-      joinSession: sequences.joinSession,
-      stopSession: sequences.stopSession,
       updateField: sequences.updateField,
+
+      getDevices: sequences.getDevices,
+      addDevice: sequences.addDevice,
+      sendCommand: sequences.sendCommand,
+
+      stopSession: sequences.stopSession,
       serverMessage: sequences.serverMessage,
       updateIsConnected: sequences.updateIsConnected,
       updateMark: sequences.updateMark,

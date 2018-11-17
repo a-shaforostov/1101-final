@@ -5,35 +5,29 @@ export const ws = {
   comp: null,
 };
 
-export function createSession({ state, props }) {
-  const url = state.get(`data.jira.url`);
-  const login = state.get(`data.jira.login`);
-  const pass = state.get(`data.jira.pass`);
-  let jira;
-  if (url && login && pass) {
-    jira = {
-      url,
-      auth: Buffer.from(`${login}:${pass}`).toString('base64'),
-    }
-  } else {
-    state.set(`data.jira`, {});
-  }
+export function getDevices({ state, props }) {
   ws.comp.send(JSON.stringify({
-    action: 'createSession',
+    action: 'getDevices',
+    // payload: {},
+  }));
+}
+
+export function addDevice({ state, props }) {
+  ws.comp.send(JSON.stringify({
+    action: 'addDevice',
     payload: {
-      login: props.login,
-      marks: props.marks || [0, 1, 2, 3, 5, 8, '?'],
-      jira,
+      ip: state.get(`data.newIp`),
+      port: state.get(`data.newPort`),
     },
   }));
 }
 
-export function joinSession({ state, props }) {
+export function sendCommand({ state, props }) {
   ws.comp.send(JSON.stringify({
-    action: 'joinSession',
+    action: 'sendCommand',
     payload: {
-      sessionId: state.get(`data.sessionId`),
-      login: props.login,
+      command: props.command,
+      url: props.url,
     },
   }));
 }
@@ -71,8 +65,11 @@ export function removeMark({ state, props }) {
 
 export function serverMessage(context) {
   const { action, payload } = context.props;
-  context.state.set(`data.playground.state`, '-stable-');
-  wsHandlers[action](context, payload);
+  if (action === 'error') {
+    setError({ state: context.state, props: { error: payload.error } });
+  } else {
+    wsHandlers[action](context, payload);
+  }
 }
 
 export function createStory({ state, props }) {

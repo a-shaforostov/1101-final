@@ -2,16 +2,42 @@ const sessions = require('../sessions');
 
 module.exports = wss => {
 
-  function createSession(ws, payload) {
-    const s = sessions.createSession(ws.id, payload);
-    const ps = sessions.getPublicSession(s.id);
-    ws.send(JSON.stringify({
-      action: 'newSession',
-      payload: {
-        ...ps,
-        token: s.observer.token,
-      },
-    }));
+  function addDevice(ws, payload) {
+    sessions.addDevice(payload)
+      .then(res => {
+        if (res) {
+          const ps = sessions.getPublicState();
+          sendState();
+        } else {
+          const response = {
+            success: false,
+            error: 'Пристрій не знайдено',
+          };
+          ws.send(JSON.stringify({
+            action: 'error',
+            payload: response,
+          }));
+        }
+      });
+  }
+
+  function sendCommand(ws, payload) {
+    sessions.sendCommand(payload)
+      .then(res => {
+        if (res) {
+          const ps = sessions.getPublicState();
+          sendState();
+        } else {
+          const response = {
+            success: false,
+            error: 'Не вдалося виконати команду',
+          };
+          ws.send(JSON.stringify({
+            action: 'error',
+            payload: response,
+          }));
+        }
+      });
   }
 
   function joinSession(ws, payload) {
@@ -151,13 +177,11 @@ module.exports = wss => {
     sendSessionState(payload.sessionId);
   }
 
-  function sendSessionState(sessionId) {
-    const s = sessions.getSession(sessionId);
-    const ps = sessions.getPublicSession(sessionId);
-    [s.observer, ...s.players].forEach(user => {
-      const ws = sessions.connections[user.connectionId];
-      ws.send(JSON.stringify({
-        action: 'sendSessionState',
+  function sendState() {
+    const ps = sessions.getPublicState();
+    Object.values(sessions.connections).forEach(conn => {
+      conn.send(JSON.stringify({
+        action: 'sendState',
         payload: ps,
       }));
     })
@@ -188,9 +212,10 @@ module.exports = wss => {
   });
 
   return {
-    createSession,
+    addDevice,
+    sendCommand,
     joinSession,
-    sendSessionState,
+    sendState,
     createStory,
     createStoryFromJira,
     giveMark,

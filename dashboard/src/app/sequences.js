@@ -35,8 +35,10 @@ export const showStats = set(state`data.statsVisible`, props`visible`);
 export const serverMessage = actions.serverMessage;
 
 /* Відправлення повідомлень на сервер */
-export const createSession = factories.messageHandlerFactory([actions.createSession]);
-export const joinSession = factories.messageHandlerFactory([actions.joinSession]);
+export const getDevices = factories.messageHandlerFactory([actions.getDevices]);
+export const addDevice = factories.messageHandlerFactory([actions.addDevice]);
+export const sendCommand = factories.messageHandlerFactory([actions.sendCommand]);
+
 export const stopSession = factories.messageHandlerFactory([actions.stopSession]);
 export const createStory = factories.messageHandlerFactory([actions.createStory]);
 export const createStoryFromJira = factories.messageHandlerFactory([actions.createStoryFromJira]);
