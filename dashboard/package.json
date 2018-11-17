@@ -8,6 +8,7 @@
     "react-scripts": "2.1.1",
     "@cerebral/react": "^4.0.0",
     "cerebral": "^5.0.0",
+    "page": "^1.10.2",
     "semantic-ui-css": "^2.4.0",
     "semantic-ui-react": "^0.82.5"
   },

@@ -9,7 +9,7 @@ import 'semantic-ui-css/semantic.min.css';
 
 import Application from './components/Application';
 
-import registerServiceWorker from './registerServiceWorker';
+// import registerServiceWorker from './serviceWorker';
 import Devtools from "cerebral/devtools";
 
 let devtools = null;
@@ -42,7 +42,7 @@ ReactDOM.render(
   document.getElementById('root'),
 );
 
-registerServiceWorker();
+// registerServiceWorker();
 
 if (module.hot) {
     module.hot.accept();

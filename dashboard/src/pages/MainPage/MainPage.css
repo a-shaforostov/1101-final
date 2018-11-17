@@ -1,0 +1,24 @@
+.wrapper {
+    height: 100%;
+}
+
+.container {
+    display: flex;
+    width: 440px;
+    min-width: 440px;
+    max-width: 960px;
+    margin: 0 auto;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+.pass__input input {
+    width: 162px !important;
+}
+
+.observer__login .label {
+    width: 140px!important;
+    text-align: right;
+}

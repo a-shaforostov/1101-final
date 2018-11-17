@@ -48,7 +48,6 @@ export default ({ app }) => {
     },
     signals: {
       rootRouted: route('/', sequences.rootRouted), // Головна сторінка, створення гри
-      playerRouted: route('/:id', sequences.playerRouted), // Підключення гравців
 
       createSession: sequences.createSession,
       joinSession: sequences.joinSession,
