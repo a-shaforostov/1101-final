@@ -1,33 +1,9 @@
 import { setError } from "../helpers";
 
 export function sendState({ state }, payload) {
-  state.set(`data.devices`, payload.devices);
-}
-
-export function joinSessionResponse({ state }, data) {
-  if (data.success) {
-    state.set(`data.auth`, true);
-    state.set(`data.isObserver`, false);
-    state.set(`data.marks.items`, data.payload.marks);
-    state.set(`data.playground`, data.payload);
-  } else {
-    state.set(`data.auth`, false);
-    state.set(`data.isObserver`, false);
-    // state.set(`data.error`, data.error);
-    setError({ state, props: { error: data.error } });
-  }
-}
-
-export function sendSessionState({ state }, payload) {
-  state.set(`data.playground`, payload);
-  if (payload.currentStory) {
-    state.set(`data.storyedit`, payload.currentStory.text);
-  }
-}
-
-export function sendSessionClosed({ state }, payload) {
-  state.set(`data.error`, payload.message);
-  state.set(`data.playground`, null);
+  const devices = payload.devices;
+  Object.keys(payload.devices).forEach(key => devices[key].pending = false);
+  state.set(`data.devices`, devices);
 }
 
 export function errorMessage({ state }, payload) {

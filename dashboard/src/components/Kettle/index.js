@@ -13,11 +13,21 @@ class Kettle extends Component {
     this.props.sendCommand({ command, url: this.props.data.url });
   };
 
+  handleRemove = () => {
+    this.props.remove({ url: this.props.data.url });
+  };
+
   render() {
-    const { url, works, temperature, amount } = this.props.data;
+    const { url, works, temperature, amount, pending } = this.props.data;
     return (
       <Table.Row key={url}>
-        <Table.Cell>Чайник</Table.Cell>
+        <Table.Cell>
+          Чайник
+          {
+            pending &&
+            <Icon loading name='asterisk' />
+          }
+        </Table.Cell>
         <Table.Cell>{url}</Table.Cell>
         <Table.Cell>
           <div>Режим: <Icon name={works ? 'circle' : 'circle outline'} color={works ? 'green' : 'black'} /></div>
@@ -32,6 +42,11 @@ class Kettle extends Component {
             </Dropdown.Menu>
           </Dropdown>
         </Table.Cell>
+        <Table.Cell>
+          <Button color="red" onClick={this.handleRemove}>
+            <Icon name={"remove"} color="white" />
+          </Button>
+        </Table.Cell>
       </Table.Row>
     )
   }
@@ -40,6 +55,7 @@ class Kettle extends Component {
 export default connect(
   {
     sendCommand: signal`sendCommand`,
+    remove: signal`remove`,
   },
   Kettle,
 );

@@ -22,6 +22,7 @@ class WebSocketProvider extends Component {
     ws.comp.onopen = function() {
       const { updateIsConnected } = self.props;
       updateIsConnected({ value: true });
+      self.props.getDevices();
     };
 
     ws.comp.onclose = function() {
@@ -56,6 +57,7 @@ export default connect(
     isConnected: state`data.isConnected`,
     onServerMessage: signal`serverMessage`,
     updateIsConnected: signal`updateIsConnected`,
+    getDevices: signal`getDevices`,
   },
   WebSocketProvider,
 );

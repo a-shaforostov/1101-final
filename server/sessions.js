@@ -24,6 +24,10 @@ class Sessions extends EventEmitter {
       })
   }
 
+  remove({ url }) {
+    delete this.devices[url];
+  }
+
   sendCommand({ command, url }) {
     return axios.post(`http://${url}/${command}`)
       .then(response => {

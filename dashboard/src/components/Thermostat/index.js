@@ -13,11 +13,21 @@ class Thermostat extends Component {
     this.props.sendCommand({ command, url: this.props.data.url });
   };
 
+  handleRemove = () => {
+    this.props.remove({ url: this.props.data.url });
+  };
+
   render() {
-    const { url, floorHeating, airConditioning, floorTemp, airTemp, floorTarget, airTarget } = this.props.data;
+    const { url, floorHeating, airConditioning, floorTemp, airTemp, floorTarget, airTarget, pending } = this.props.data;
     return (
       <Table.Row key={url}>
-        <Table.Cell>Термостат</Table.Cell>
+        <Table.Cell>
+          Термостат
+          {
+            pending &&
+            <Icon loading name='asterisk' />
+          }
+        </Table.Cell>
         <Table.Cell>{url}</Table.Cell>
         <Table.Cell>
           <div>Режим пола: <Icon name={floorHeating ? 'circle' : 'circle outline'} color={floorHeating ? 'green' : 'black'} /></div>
@@ -37,6 +47,11 @@ class Thermostat extends Component {
             </Dropdown.Menu>
           </Dropdown>
         </Table.Cell>
+        <Table.Cell>
+          <Button color="red" onClick={this.handleRemove}>
+            <Icon name={"remove"} color="white" />
+          </Button>
+        </Table.Cell>
       </Table.Row>
     )
   }
@@ -45,6 +60,7 @@ class Thermostat extends Component {
 export default connect(
   {
     sendCommand: signal`sendCommand`,
+    remove: signal`remove`,
   },
   Thermostat,
 );

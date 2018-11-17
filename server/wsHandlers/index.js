@@ -21,6 +21,17 @@ module.exports = wss => {
       });
   }
 
+  function remove(ws, payload) {
+    sessions.remove(payload);
+    const ps = sessions.getPublicState();
+    sendState();
+  }
+
+  function getDevices(ws) {
+    const ps = sessions.getPublicState();
+    sendState();
+  }
+
   function sendCommand(ws, payload) {
     sessions.sendCommand(payload)
       .then(res => {
@@ -213,6 +224,8 @@ module.exports = wss => {
 
   return {
     addDevice,
+    getDevices,
+    remove,
     sendCommand,
     joinSession,
     sendState,

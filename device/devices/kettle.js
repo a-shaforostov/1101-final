@@ -20,7 +20,7 @@ class Kettle extends Device {
       }
     };
 
-    super(state);
+    super(state, commands);
   }
 }
 

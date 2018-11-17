@@ -43,9 +43,10 @@ class MainPage extends Component {
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell>Тип</Table.HeaderCell>
-                      <Table.HeaderCell>Пристрій</Table.HeaderCell>
+                      <Table.HeaderCell>Пристрій (Ім'я)</Table.HeaderCell>
                       <Table.HeaderCell>Стан</Table.HeaderCell>
                       <Table.HeaderCell>Команди</Table.HeaderCell>
+                      <Table.HeaderCell></Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
@@ -94,6 +95,7 @@ export default connect(
     devices: state`data.devices`,
     isConnected: state`data.isConnected`,
     updateField: signal`updateField`,
+    getDevices: signal`getDevices`,
   },
   MainPage,
 );
